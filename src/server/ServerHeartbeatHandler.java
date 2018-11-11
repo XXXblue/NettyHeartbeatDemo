@@ -1,11 +1,13 @@
 package server;
 
+import common.PacketProto;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.handler.timeout.IdleStateEvent;
 import io.netty.util.ReferenceCountUtil;
 
 import static common.PacketProto.Packet;
+import static common.PacketProto.Packet.newBuilder;
 
 /**
  * Created by Yohann on 2016/11/9.
@@ -90,7 +92,14 @@ public class ServerHeartbeatHandler extends ChannelInboundHandlerAdapter {
         // 将心跳丢失计数器置为0
         counter = 0;
         String data = packet.getData();
-        System.out.println(data);
+        System.out.println(ctx.channel().remoteAddress() + data);
+
+        PacketProto.Packet.Builder builder = newBuilder();
+        builder.setPacketType(PacketProto.Packet.PacketType.DATA);
+        builder.setData("我这个就是正确的答案");
+        PacketProto.Packet packetResp = builder.build();
+
+        ctx.writeAndFlush(packetResp);
         ReferenceCountUtil.release(packet);
     }
 }

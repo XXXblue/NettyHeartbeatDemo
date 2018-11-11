@@ -35,6 +35,15 @@ public class ClientHeartbeatHandler extends ChannelInboundHandlerAdapter {
     }
 
     @Override
+    public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
+        // 判断接收到的包类型
+        if (msg instanceof Packet) {
+            Packet packet = (Packet) msg;
+            System.out.println(packet.getData());
+        }
+    }
+
+    @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
         System.out.println("连接出现异常");
     }
